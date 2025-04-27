@@ -1,0 +1,13 @@
+#!/bin/bash
+
+devs=($(smartctl --scan -j | jq -r '.devices[] | .name'))
+
+for dev in "${devs[@]}"; do
+    sm_res=$(smartctl -j -i $dev)
+    model_name=$(echo "$sm_res" | jq -r '.model_name')
+    serial_number=$(echo "$sm_res" | jq -r '.serial_number')
+    printf "Device %s :\n" "$dev"
+    printf "\t\tModel name: %s\n" "$model_name"
+    printf "\t\tSerial number: %s\n\n" "$serial_number"
+done
+
